@@ -1,0 +1,98 @@
+ssh 인증 설정
+
+[gpadmin@mdw ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.185.11	mdw
+192.168.185.12	se1
+192.168.185.13	se2
+192.168.185.14	se3
+192.168.185.15	se4
+
+
+#root 계정 로그인
+
+[root@mdw ~]$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:Gj4n9u89MimA4m8lUufGjQtCZ4Y+WkYSyU3zq1W1uvo gpadmin@mdw
+The key's randomart image is:
++---[RSA 2048]----+
+|..oo     .       |
+|o. .o   . .      |
+| . . . . .       |
+|. + = + .        |
+| = = B.+S        |
+|  O *.Boo        |
+| = * =*+.  .     |
+|. . ..o=. +..    |
+|   o...E.+oo..   |
++----[SHA256]-----+
+
+#gpadmin 계정 로그인
+
+[gpadmin@mdw ~]$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/gpadmin/.ssh/id_rsa): 
+/home/gpadmin/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/gpadmin/.ssh/id_rsa.
+Your public key has been saved in /home/gpadmin/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:Gj4n9u89MimA4m8lUufGjQtCZ4Y+WkYSyU3zq1W1uvo gpadmin@mdw
+The key's randomart image is:
++---[RSA 2048]----+
+|..oo     .       |
+|o. .o   . .      |
+| . . . . .       |
+|. + = + .        |
+| = = B.+S        |
+|  O *.Boo        |
+| = * =*+.  .     |
+|. . ..o=. +..    |
+|   o...E.+oo..   |
++----[SHA256]-----+
+
+authorized_keys 인증키 복사
+#root#
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub 
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub root@192.168.185.12
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub root@192.168.185.13
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub root@192.168.185.14
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub root@192.168.185.15
+또는 
+
+authorized_keys 복사
+#root#
+
+scp $HOME/.ssh/authorized_keys root@192.168.185.12:/root/.ssh/
+scp $HOME/.ssh/authorized_keys root@192.168.185.13:/root/.ssh/
+scp $HOME/.ssh/authorized_keys root@192.168.185.14:/root/.ssh/
+scp $HOME/.ssh/authorized_keys root@192.168.185.15:/root/.ssh/
+
+
+#gpadmin#
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub gpadmin@192.168.185.11
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub gpadmin@192.168.185.12
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub gpadmin@192.168.185.13
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub gpadmin@192.168.185.14
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub gpadmin@192.168.185.15
+
+#test#
+
+ssh gpadmin@se1 후 password 입력하지 않으면 정상적으로 적용 되었다는 내용
+
+사실 ssh  key 를 >> 이런식으로 추가해도 되지만 여러면에서 위에 구문이 편함
+
+
+
+
